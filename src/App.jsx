@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { Login } from "./components/login";
+import Register from "./components/Register";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "./features/auth/authSlice";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [currentPage, setCurrentPage] = useState("home");
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth);
 
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  let content;
+
+  if (currentPage === "home") {
+    content = <h2> Welcome to Home page.</h2>;
+  } else if (currentPage === "login") {
+    content = <Login />;
+  } else if (currentPage === "register") {
+    content = <Register />;
+  }
   return (
-    <>
+    <div className="p-5">
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <div className="flex gap-3 ">
+          <button
+            onClick={() => setCurrentPage("home")}
+            className="px-4 py-2 rounded bg-gray-200  cursor-pointer hover:bg-gray-300 transition-all duration-200"
+          >
+            Home
+          </button>
+          <button
+            onClick={() => setCurrentPage("login")}
+            className="px-4 py-2 rounded bg-gray-200  cursor-pointer hover:bg-gray-300 transition-all duration-200"
+          >
+            Login
+          </button>
+          <button
+            onClick={() => setCurrentPage("register")}
+            className="px-4 py-2 rounded bg-gray-200  cursor-pointer hover:bg-gray-300 transition-all duration-200"
+          >
+            Register
+          </button>
+          <button
+            onClick={() => dispatch(logout())}
+            className="px-4 py-2 rounded bg-gray-200  cursor-pointer hover:bg-gray-300 transition-all duration-200"
+          >
+            Logout
+          </button>
+        </div>
+
+        <div className="bg-gray-100 mt-5 p-5 rounded">{content}</div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
